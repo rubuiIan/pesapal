@@ -1,0 +1,1 @@
+Merged changes from 'branch1' into 'branch2'

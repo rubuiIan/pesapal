@@ -1,0 +1,18 @@
+{
+    "sourceFile": "project/problem1/spoof.py",
+    "activeCommit": 0,
+    "commits": [
+        {
+            "activePatchIndex": 0,
+            "patches": [
+                {
+                    "date": 1733486300185,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n"
+                }
+            ],
+            "date": 1733486300185,
+            "name": "Commit-0",
+            "content": "from PIL import Image\r\nimport hashlib\r\nimport random\r\nimport os\r\n\r\n# Function to load an image\r\ndef load_image(image_path):\r\n    try:\r\n        img = Image.open(image_path)\r\n        return img\r\n    except Exception as e:\r\n        print(f\"Error loading image: {e}\")\r\n        return None\r\n\r\n# Function to manipulate the image (adjusting metadata or pixels)\r\ndef manipulate_image(img):\r\n    pixels = img.load()\r\n    width, height = img.size\r\n    \r\n    # Change random pixels slightly to alter the image\r\n    for i in range(random.randint(50, 100)):\r\n        x = random.randint(0, width - 1)\r\n        y = random.randint(0, height - 1)\r\n        r, g, b = pixels[x, y]\r\n        \r\n        # Modify the pixel values slightly\r\n        r = (r + random.randint(-5, 5)) % 256\r\n        g = (g + random.randint(-5, 5)) % 256\r\n        b = (b + random.randint(-5, 5)) % 256\r\n        \r\n        pixels[x, y] = (r, g, b)\r\n    \r\n    return img\r\n\r\n# Function to hash the image and check if it matches the desired prefix\r\ndef hash_image(img):\r\n    img_bytes = img.tobytes()\r\n    \r\n    sha256_hash = hashlib.sha256(img_bytes).hexdigest()\r\n    return sha256_hash\r\n\r\n# Function to adjust the image until the hash prefix matches\r\ndef adjust_until_hash_matches(img, target_prefix=\"0000\", max_attempts=10000):\r\n    attempts = 0\r\n    while attempts < max_attempts:\r\n        img = manipulate_image(img)  \r\n        hashed_value = hash_image(img) \r\n        if hashed_value.startswith(target_prefix):\r\n            print(f\"Match found after {attempts} attempts!\")\r\n            print(f\"Hash: {hashed_value}\")\r\n            break\r\n        attempts += 1\r\n        if attempts % 100 == 0:\r\n            print(f\"Attempt {attempts}...\")\r\n\r\n    if attempts >= max_attempts:\r\n        print(f\"Max attempts reached without a match.\")\r\n\r\n# Main function to load, manipulate and hash the image\r\ndef main():\r\n    image_path = \"images/Lambo.jpg\"\r\n    target_prefix = \"0000\" \r\n    \r\n    img = load_image(image_path)\r\n    if img:\r\n        print(\"Image loaded successfully.\")\r\n        adjust_until_hash_matches(img, target_prefix)\r\n    else:\r\n        print(\"Failed to load image.\")\r\n\r\nif __name__ == \"__main__\":\r\n    main()\r\n"
+        }
+    ]
+}
